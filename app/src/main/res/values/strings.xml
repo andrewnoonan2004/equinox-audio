@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Equinox Audio</string>
+    <string name="tile_label">Equinox EQ</string>
+    <string name="widget_label">Equinox EQ</string>
+    <string name="notification_channel_name">Audio engine</string>
+    <string name="notification_channel_description">Shows the active EQ profile while the audio engine runs</string>
+    <string name="notification_title_active">Equinox EQ active</string>
+    <string name="notification_title_bypassed">Equinox EQ bypassed</string>
+    <string name="notification_no_profile">Manual EQ</string>
+    <string name="notification_short_on">EQ</string>
+    <string name="notification_action_quit">Quit</string>
+    <string name="widget_status_on">Active</string>
+    <string name="widget_status_off">Bypassed</string>
+    <string name="widget_toggle">Toggle EQ</string>
+    <string name="widget_open">Open</string>
+    <string name="status_stopped">Stopped</string>
+</resources>
