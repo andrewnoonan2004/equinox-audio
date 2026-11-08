@@ -1,6 +1,7 @@
 # WaveEffects 🎚️🔊
 
 [![Android CI](https://img.shields.io/badge/CI-GitHub_Actions-2088FF.svg?logo=github-actions&logoColor=white)](.github/workflows/android.yml)
+[![Release APK](https://img.shields.io/badge/Release-v1.0.0_APK-success.svg?logo=android&logoColor=white)](https://github.com/andrewnoonan2004/equinox-audio/releases/tag/v1.0.0)
 [![Android Min SDK](https://img.shields.io/badge/minSdk-28-blue.svg)](https://developer.android.com/about/versions/pie)
 [![Target SDK](https://img.shields.io/badge/targetSdk-36-green.svg)](https://developer.android.com)
 [![Compose BOM](https://img.shields.io/badge/Compose_BOM-2026.03.01-blueviolet.svg)](https://developer.android.com/jetpack/compose)
@@ -8,6 +9,29 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 **WaveEffects** is an advanced audio DSP (Digital Signal Processing) engine and equalizer for Android, inspired by the Linux powerhouse **EasyEffects** (formerly PulseEffects). Built natively with Jetpack Compose, Material 3 Expressive, and Android's low-level audio effects framework (`DynamicsProcessing`), WaveEffects brings desktop-class acoustic tuning, multiband compression, brickwall limiting, AutoEQ headphone calibration, and real-time audio visualization to mobile devices.
+
+---
+
+## 📱 App Screenshots & Visual Walkthrough
+
+<div align="center">
+
+| 🎛️ Equalizer & Spline Curve | 🎧 AutoEQ Headphone Database |
+| :---: | :---: |
+| <img src="docs/screenshots/01_equalizer.jpg" width="360" alt="WaveEffects Equalizer Screen" /> | <img src="docs/screenshots/02_autoeq.jpg" width="360" alt="WaveEffects AutoEQ Screen" /> |
+| *10-band ISO octave faders, Bézier frequency curve, and dynamic wallpaper palette* | *4,000+ headphone Harman target profiles & custom importer* |
+
+| ⚡ Studio Dynamics Processor | 🌌 Spatial & Reverb Effects |
+| :---: | :---: |
+| <img src="docs/screenshots/03_dynamics.jpg" width="360" alt="WaveEffects Dynamics Processing" /> | <img src="docs/screenshots/04_effects.jpg" width="360" alt="WaveEffects Effects Suite" /> |
+| *Multiband dynamic range compressor & peak brickwall limiter* | *Bass Boost, 3D Spatial Virtualizer, Loudness & Reverb* |
+
+| 📊 Real-Time Spectrum Visualizer & Audio Routing |
+| :---: |
+| <img src="docs/screenshots/05_sessions.jpg" width="380" alt="WaveEffects Sessions & Spectrum Visualizer" /> |
+| *30 FPS FFT frequency visualizer, oscilloscope, and per-app session routing* |
+
+</div>
 
 ---
 
