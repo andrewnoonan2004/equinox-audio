@@ -1,68 +1,118 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.plugin.compose")
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.compose.compiler)
+  alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.equinox.audioeq"
-    compileSdk = 37
-
+    namespace = "com.droid.waveeffects"
+    compileSdk = 36
     defaultConfig {
-        applicationId = "com.equinox.audioeq"
-        minSdk = 31
-        targetSdk = 37
+        applicationId = "com.droid.waveeffects"
+        minSdk = 28
+        targetSdk = 36
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "1.0"
+    }
+
+    base {
+        archivesName.set("WaveEffects")
+    }
+
+    signingConfigs {
+        create("release") {
+            val keystoreFile = rootProject.file("release-keystore.jks")
+            if (keystoreFile.exists()) {
+                storeFile = keystoreFile
+                storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: "waveeffects123"
+                keyAlias = System.getenv("ANDROID_KEY_ALIAS") ?: "waveeffects"
+                keyPassword = System.getenv("ANDROID_KEY_PASSWORD") ?: "waveeffects123"
+            } else {
+                initWith(getByName("debug"))
+            }
+        }
     }
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-
     buildFeatures {
-        compose = true
+      compose = true
+      aidl = false
+      buildConfig = false
+      shaders = false
     }
+
+    testOptions {
+        unitTests.all {
+            it.systemProperty("robolectric.useConscrypt", "false")
+        }
+    }
+
+    packaging {
+      resources {
+        excludes += "/META-INF/{AL2.0,LGPL2.1}"
+      }
+    }
+}
+
+tasks.withType<Test> {
+    systemProperty("robolectric.useConscrypt", "false")
 }
 
 kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
-    }
+    jvmToolchain(21)
 }
 
 dependencies {
-    val composeBom = platform("androidx.compose:compose-bom:2026.09.00")
-    implementation(composeBom)
+  val composeBom = platform(libs.androidx.compose.bom)
+  implementation(composeBom)
+  androidTestImplementation(composeBom)
 
-    implementation("androidx.core:core-ktx:1.17.0")
-    implementation("androidx.activity:activity-compose:1.11.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
-    implementation("androidx.lifecycle:lifecycle-service:2.9.4")
+  // Core Android dependencies
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.lifecycle.runtime.ktx)
+  implementation(libs.androidx.activity.compose)
 
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.foundation:foundation")
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.compose.material3:material3:1.4.0")
-    implementation("androidx.compose.material3:material3-window-size-class:1.4.0")
-    implementation("androidx.compose.material3.adaptive:adaptive:1.1.0")
-    implementation("androidx.compose.material3.adaptive:adaptive-layout:1.1.0")
-    implementation("androidx.compose.material3.adaptive:adaptive-navigation:1.1.0")
+  // Arch Components
+  implementation(libs.androidx.lifecycle.runtime.compose)
+  implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    implementation("androidx.glance:glance-appwidget:1.1.1")
-    implementation("androidx.glance:glance-material3:1.1.1")
+  // Compose
+  implementation(libs.androidx.compose.ui)
+  implementation(libs.androidx.compose.ui.tooling.preview)
+  implementation(libs.androidx.compose.material3)
+  implementation(libs.androidx.compose.material.icons.extended)
+  implementation(libs.kotlinx.serialization.json)
+  // Tooling
+  debugImplementation(libs.androidx.compose.ui.tooling)
+  // Instrumented tests
+  androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+  debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+  // Local tests: jUnit, coroutines, Android runner, Robolectric
+  testImplementation(libs.junit)
+  testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.robolectric)
+  testImplementation(libs.androidx.test.core)
+  testImplementation(libs.androidx.test.ext.junit)
 
-    debugImplementation("androidx.compose.ui:ui-tooling")
+  // Instrumented tests: jUnit rules and runners
+  androidTestImplementation(libs.androidx.test.core)
+  androidTestImplementation(libs.androidx.test.ext.junit)
+  androidTestImplementation(libs.androidx.test.runner)
+  androidTestImplementation(libs.androidx.test.espresso.core)
+
+  // Navigation
+  implementation(libs.androidx.navigation3.ui)
+  implementation(libs.androidx.navigation3.runtime)
+  implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 }

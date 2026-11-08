@@ -3,6 +3,8 @@ name: Android CI / Build WaveEffects
 on:
   push:
     branches: [ "main", "master" ]
+    tags:
+      - "v*"
   pull_request:
     branches: [ "main", "master" ]
   workflow_dispatch:
@@ -12,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -33,8 +35,6 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          packages: platform-tools
 
       - name: Grant Execute Permission for Gradlew
         run: chmod +x gradlew
@@ -50,13 +50,32 @@ jobs:
           path: app/build/reports/tests/testDebugUnitTest/
           retention-days: 7
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+      - name: Build Release & Debug APKs
+        run: ./gradlew assembleRelease assembleDebug --stacktrace
+
+      - name: Upload Release APK (Non-Debug)
+        uses: actions/upload-artifact@v4
+        with:
+          name: WaveEffects-release-apk
+          path: app/build/outputs/apk/release/WaveEffects-release.apk
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: WaveEffects-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/WaveEffects-debug.apk
           if-no-files-found: error
           retention-days: 14
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            app/build/outputs/apk/release/WaveEffects-release.apk
+            app/build/outputs/apk/debug/WaveEffects-debug.apk
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

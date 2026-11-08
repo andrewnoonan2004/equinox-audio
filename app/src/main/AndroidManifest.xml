@@ -1,45 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.USE_PINNED_WINDOWING_LAYER" />
-    <!-- Development permission: only usable after `adb shell pm grant com.equinox.audioeq android.permission.DUMP`. -->
-    <uses-permission
-        android:name="android.permission.DUMP"
-        tools:ignore="ProtectedPermissions" />
-
-    <uses-feature
-        android:name="android.hardware.touchscreen"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.type.pc"
-        android:required="false" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
-        android:name=".EquinoxApp"
+        android:name=".WaveEffectsApp"
         android:allowBackup="true"
-        android:icon="@drawable/ic_equinox"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_equinox"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Equinox">
+        android:windowSoftInputMode="adjustResize"
+        android:theme="@style/Theme.WaveEffects">
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:launchMode="singleInstancePerTask"
-            android:resizeableActivity="true"
-            android:supportsPictureInPicture="true"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|keyboard|keyboardHidden|navigation|uiMode|density">
-            <property
-                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
-                android:value="true" />
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -47,47 +28,19 @@
         </activity>
 
         <service
-            android:name=".audio.AudioEngineService"
+            android:name=".service.AudioEffectsService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
 
-        <service
-            android:name=".ui.QuickEqTileService"
-            android:exported="true"
-            android:icon="@drawable/ic_equinox"
-            android:label="@string/tile_label"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
-                android:value="true" />
-            <meta-data
-                android:name="android.service.quicksettings.ACTIVE_TILE"
-                android:value="true" />
-        </service>
-
         <receiver
-            android:name=".ui.EquinoxDesktopWidgetReceiver"
-            android:exported="false"
-            android:label="@string/widget_label">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/equinox_widget_info" />
-        </receiver>
-
-        <receiver
-            android:name=".audio.AudioSessionReceiver"
-            android:exported="true"
-            tools:ignore="ExportedReceiver">
+            android:name=".service.AudioSessionReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.media.action.OPEN_AUDIO_EFFECT_CONTROL_SESSION" />
                 <action android:name="android.media.action.CLOSE_AUDIO_EFFECT_CONTROL_SESSION" />
             </intent-filter>
         </receiver>
+
     </application>
+
 </manifest>
