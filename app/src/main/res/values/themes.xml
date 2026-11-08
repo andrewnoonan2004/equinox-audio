@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.WaveEffects" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.WaveEffects" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- ChromeOS & Android light mode window and caption bar styling -->
+        <item name="android:statusBarColor">#FFF8F9FA</item>
+        <item name="android:navigationBarColor">#FFF8F9FA</item>
+        <item name="android:windowBackground">#FFF8F9FA</item>
+        <item name="android:colorPrimary">#FFF8F9FA</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
 </resources>

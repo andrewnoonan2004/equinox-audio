@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.WaveEffects" parent="android:Theme.Material.NoActionBar">
+        <!-- ChromeOS & Android dark mode window and caption bar styling -->
+        <item name="android:statusBarColor">#FF0E0E12</item>
+        <item name="android:navigationBarColor">#FF0E0E12</item>
+        <item name="android:windowBackground">#FF0E0E12</item>
+        <item name="android:colorPrimary">#FF16130E</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+</resources>

@@ -1,6 +1,7 @@
 package com.droid.waveeffects
 
 import android.Manifest
+import android.app.ActivityManager
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -12,10 +13,14 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.droid.waveeffects.audio.AudioDemoPlayer
@@ -81,6 +86,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             val state by viewModel.uiState.collectAsState()
             WaveEffectsTheme(dynamicColor = state.useDynamicColor) {
+                val surfaceColor = MaterialTheme.colorScheme.surface
+                val surfaceArgb = surfaceColor.toArgb()
+                val isDark = surfaceColor.luminance() < 0.5f
+
+                DisposableEffect(surfaceArgb, isDark) {
+                    updateChromeOsTitleBarAndSystemWindows(surfaceArgb, isDark)
+                    onDispose { }
+                }
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -91,6 +105,24 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+    }
+
+    private fun updateChromeOsTitleBarAndSystemWindows(surfaceArgb: Int, isDark: Boolean) {
+        runCatching {
+            val taskDesc = ActivityManager.TaskDescription.Builder()
+                .setPrimaryColor(surfaceArgb)
+                .setLabel(getString(R.string.app_name))
+                .setIcon(R.drawable.app_icon)
+                .build()
+            setTaskDescription(taskDesc)
+
+            val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+            insetsController.isAppearanceLightStatusBars = !isDark
+            insetsController.isAppearanceLightNavigationBars = !isDark
+
+            window.statusBarColor = surfaceArgb
+            window.navigationBarColor = surfaceArgb
         }
     }
 
